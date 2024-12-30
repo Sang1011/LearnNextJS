@@ -1,13 +1,30 @@
+import { MainLayout } from "@/components/layout";
+import { NextPageWithLayout } from "@/models";
+import { useRouter } from "next/router";
+import React from "react";
 
-import React from 'react';
+const Home: NextPageWithLayout = () => {
+  const router = useRouter();
 
-export interface IndexProps {
-}
+  function goToDetailPage(){
+    router.push({
+      pathname: "/posts/[postId]",
+      query: {
+        postId: 123,
+        ref: 'social'
+      }
+    })
+  }
 
-export default function App (props: IndexProps) {
+
   return (
-    <div>
-      Home Page
-    </div>
+    <>
+      <div>
+        <div>Home Page</div>
+      </div>
+    </>
   );
 }
+Home.Layout = MainLayout;
+
+export default Home;

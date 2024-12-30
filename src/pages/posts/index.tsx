@@ -1,6 +1,8 @@
 
 import { GetStaticProps, GetStaticPropsContext } from 'next';
 import React from 'react';
+import Link from 'next/link';
+import axios from 'axios';
 
 export interface Post {
   id: number;
@@ -18,7 +20,11 @@ export default function App ({posts}: PostListPageProps) {
       Post List Page
     </h1>
     <ul>
-      {posts.map((posts) => <li key={posts.id}>{posts.title}</li>)}
+      {posts.map((posts) => <li key={posts.id}>
+        <Link href={`posts/${posts.id}`}>
+        {posts.title}
+        </Link>
+      </li>)}
     </ul>
     </>
   );
@@ -27,10 +33,10 @@ export default function App ({posts}: PostListPageProps) {
 export const getStaticProps: GetStaticProps<PostListPageProps> = async (context: GetStaticPropsContext) => {
   // server side
   // build time
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-  const data: { id: number; title: string; body: string; userId: number }[] = await res.json();
+  const res = await axios.get("https://dummyjson.com/posts");
+  const data = res.data.posts;
 
-  const posts: Post[] = data.map((x) => ({
+  const posts: Post[] = data.map((x: Post) => ({
     id: x.id,
     title: x.title,
   }));
@@ -39,5 +45,6 @@ export const getStaticProps: GetStaticProps<PostListPageProps> = async (context:
     props: {
       posts,
     },
+    revalidate: 10,
   };
 }
