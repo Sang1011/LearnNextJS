@@ -1,5 +1,6 @@
-import { MainLayout } from "@/components/layout";
+import { MainLayout } from "../components/layout";
 import { NextPageWithLayout } from "@/models";
+import { Box } from "@mui/material";
 // import { useRouter } from "next/router";
 import React from "react";
 
@@ -18,11 +19,9 @@ const Home: NextPageWithLayout = () => {
 
 
   return (
-    <>
-      <div>
-        <div>Home Page</div>
-      </div>
-    </>
+    <Box>
+      Home Page
+    </Box>
   );
 }
 Home.Layout = MainLayout;
