@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true, // Chế độ Strict Mode để phát hiện lỗi
+  images: {
+    domains: ["res.cloudinary.com"], // Thêm domain của Cloudinary
+  },
   async rewrites() {
     return [
       {
