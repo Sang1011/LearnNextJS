@@ -1,23 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuth } from "@/hooks/use-auth";
+import { encodeUrl } from "@/utils";
 import { useRouter } from "next/router";
 import React, {useEffect} from "react";
 
 export interface AuthProps {
   children: any;
+  requireLogin?: boolean
 }
 
-export default function Auth({ children }: AuthProps) {
+export default function Auth({ children, requireLogin = false }: AuthProps) {
     const router = useRouter();
     
     const {profile, firstLoading} = useAuth();
-    console.log("profile", profile?.data?.data.username)
 
     useEffect(() => {
-        if(!firstLoading && !profile?.data?.data.username) router.push('/login')
-    }, [router, profile, firstLoading])
+      if(!requireLogin) return
+        if(!firstLoading && !profile?.username) {
+          router.replace(`/login?back_to=${encodeUrl(router.asPath)}`)
+        }
+    }, [router, profile, firstLoading, requireLogin])
 
-    if(!profile?.data?.data.username) return <p>Loading...</p>
+    if(requireLogin && !profile?.username) return <p>Loading...</p>
 
   return <div>{children}</div>;
 }

@@ -18,7 +18,7 @@ export function FeaturedWorks() {
       fullDescription: "",
       shortDescription:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
-      thumbnailURL:
+        thumbnailUrl:
         "https://res.cloudinary.com/dfrn7ujle/image/upload/v1736440046/Designing_Dashboards_d9nj6j.jpg",
     },
     {
@@ -30,7 +30,7 @@ export function FeaturedWorks() {
       fullDescription: "",
       shortDescription:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
-      thumbnailURL:
+      thumbnailUrl:
         "https://res.cloudinary.com/dfrn7ujle/image/upload/v1736440047/Vibrant_Portraits_of_2020_l6nmhu.jpg",
     },
     {
@@ -42,7 +42,7 @@ export function FeaturedWorks() {
       fullDescription: "",
       shortDescription:
         "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet.",
-      thumbnailURL:
+        thumbnailUrl:
         "https://res.cloudinary.com/dfrn7ujle/image/upload/v1736440047/Malam_mcpneh.jpg",
     },
   ];

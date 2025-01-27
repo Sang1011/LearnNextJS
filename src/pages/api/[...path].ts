@@ -23,14 +23,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         }
 
     req.headers.cookie = "";
-
-    if (req.url?.startsWith('/api/')) {
-        req.url = req.url.replace('/api', '');  // Xóa /api khỏi local URL, hoặc thay bằng URL mới
-        console.log("url ",req.url)
-        // Bây giờ yêu cầu /api/products hoặc /api/carts sẽ được chuyển thành /products, /carts
-    }
+    
     proxy.web(req, res, {
-        target: 'https://dummyjson.com',
+        target: process.env.API_URL,
         changeOrigin: true,
         selfHandleResponse: false
     })

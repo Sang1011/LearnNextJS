@@ -1,44 +1,43 @@
-import * as React from 'react';
-import { useAuth } from '@/hooks/use-auth';
-import { useRouter } from 'next/router';
-export default function LoginPage () {
+import {useAuth} from "@/hooks";
+import { LoginPayload } from "@/models";
+import { decodeUrl, getErrorMessage } from "@/utils";
+import { Box, Paper, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import React from "react";
+import { toast } from "react-toastify";
+import { LoginForm } from "../components/auth";
+export default function LoginPage() {
   const router = useRouter();
-  const {profile, login, logout} = useAuth({
-    revalidateOnMount: false
+  const { login } = useAuth({
+    revalidateOnMount: false,
   });
-    async function handleLoginClick() {
-      try{
-        await login()
-        console.log('redirect to dashboard');
-        router.push("/about")
-      }catch(error){
-        console.log('failed to login', error);
-      }
-    }
-    // async function handleGetProfileClick() {
-    //   try{
-    //     await profile
-    //   }catch(error){
-    //     console.log('failed to get profile', error);
-    //   }
-    // }
-    async function handleLogoutClick() {
-      try{
-        await logout()
-        console.log('redirect to login page')
 
-      }catch(error){
-        console.log('failed to logout', error);
-      }
+  async function handleLoginSubmit(
+    payload: LoginPayload,
+    event?: React.BaseSyntheticEvent
+  ) {
+    try {
+      event?.preventDefault();
+      const backTo = router.query?.back_to ? decodeUrl(router.query?.back_to as string) : "/";
+      await login(payload);
+      router.push(backTo);
+    } catch (error: unknown) {
+      const message = getErrorMessage(error);
+      toast.error(message);
     }
-        
-    
+  }
+
   return (
-    <div>
-        <h1>Login Page</h1>
-      <button onClick={handleLoginClick}>Login</button>
-      {/* <button onClick={handleGetProfileClick}>Get Profile</button> */}
-      <button onClick={handleLogoutClick}>Logout</button>
-    </div>
+    <Box>
+      <Paper
+        elevation={4}
+        sx={{ mt: 8, p: 4, maxWidth: "480px", mx: "auto", textAlign: "center" }}
+      >
+        <Typography component="h1" variant="h5">
+          Login
+        </Typography>
+        <LoginForm onSubmit={handleLoginSubmit} />
+      </Paper>
+    </Box>
   );
 }

@@ -1,11 +1,15 @@
 import axiosClient from "@/api/axios-client";
-import { EmptyLayout } from "../components/layout";
 import { AppPropsWithLayout } from "@/models";
-import { SWRConfig } from "swr";
+import { createEmotionCache, theme } from "@/utils/index";
+import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
-import { CacheProvider, EmotionCache } from "@emotion/react";
-import { createEmotionCache, theme } from "@/utils/index";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { SWRConfig } from "swr";
+import "../../styles/global.css";
+import { EmptyLayout } from "../components/layout";
+import Auth from "../components/common/auth";
 
 const swrConfigValue = {
   fetcher: (url: string) => axiosClient.get(url),
@@ -14,21 +18,18 @@ const swrConfigValue = {
 
 const clientSideEmotionCache = createEmotionCache();
 
-function MyApp({
-  Component,
-  pageProps,
-  emotionCache = clientSideEmotionCache,
-}: AppPropsWithLayout) {
-  console.log("App re-render");
-
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const Layout = Component.Layout ?? EmptyLayout;
   return (
-    <CacheProvider value={emotionCache}>
+    <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <ToastContainer />
         <SWRConfig value={swrConfigValue}>
           <Layout>
-            <Component {...pageProps} />
+            <Auth requireLogin={Component.requireLogin ?? false}>
+              <Component {...pageProps} />
+            </Auth>
           </Layout>
         </SWRConfig>
       </ThemeProvider>

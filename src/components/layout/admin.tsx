@@ -1,7 +1,7 @@
 import { LayoutProps } from "@/models";
 import Link from "next/link";
 import Auth from "../common/auth";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/hooks";
 import { useRouter } from "next/router";
 
 export function AdminLayout({ children }: LayoutProps) {

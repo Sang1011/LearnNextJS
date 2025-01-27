@@ -29,16 +29,9 @@ export default function handler(
   }
 
   req.headers.authorization = `Bearer ${token}`;
-  if (req.url?.startsWith("/api/")) {
-    req.url = req.url.replace("/api", "");
-  }
-  if (req.url?.startsWith("/profile")) {
-    req.url = req.url.replace("/profile", "/auth/me");
-  }
 
   return new Promise((resolve) => {
     const handleProxyResponse: ProxyResCallback = (proxyRes, req, res) => {
-      console.log("Proxy response headers:", proxyRes.headers);
       let body = "";
 
       proxyRes.on("data", (chunk) => {
@@ -63,9 +56,8 @@ export default function handler(
             throw new Error("Invalid content type, expected application/json");
           }
 
-          const data = JSON.parse(decompressedBody);
-          console.log("Parsed data:", data);
-          (res as NextApiResponse).status(200).json({ message: "Get profile successfully", data });
+          const response = JSON.parse(decompressedBody);
+          (res as NextApiResponse).status(200).json({ message: "Get profile successfully", response });
         } catch (error) {
           console.error("Error:", error);
           (res as NextApiResponse).status(500).json({ message: "Error fetching profile data", error });
@@ -76,7 +68,7 @@ export default function handler(
 
     proxy.once("proxyRes", handleProxyResponse);
     proxy.web(req, res, {
-      target: "https://dummyjson.com", // Target API
+      target: process.env.API_URL, // Target API
       changeOrigin: true,
       selfHandleResponse: true,
     });

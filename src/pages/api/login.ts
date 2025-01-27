@@ -23,11 +23,6 @@ export default function handler(
 
   return new Promise((resolve) => {
     req.headers.cookie = "";
-    if (req.url?.startsWith("/api/")) {
-      req.url = req.url.replace("/api", ""); // Xóa /api khỏi local URL, hoặc thay bằng URL mới
-      console.log("url ", req.url);
-      // Bây giờ yêu cầu /api/products hoặc /api/carts sẽ được chuyển thành /products, /carts
-    }
 
     if (req.url?.startsWith("/login")) {
       req.url = req.url.replace("/login", "/auth/login");
@@ -41,18 +36,40 @@ export default function handler(
       });
       proxyRes.on("end", function () {
         try {
+          console.log(body);
+          const isSuccess =
+            proxyRes.statusCode &&
+            proxyRes.statusCode >= 200 &&
+            proxyRes.statusCode < 300;
+          if (!isSuccess) {
+            const errorResponse = JSON.parse(body);
+
+            if (proxyRes.statusCode === 401 || proxyRes.statusCode === 400) {
+              (res as NextApiResponse)
+            .status(200)
+            .json({ message: "Invalid username or password" });
+              (res as NextApiResponse).status(400).json(errorResponse);
+              return resolve(true);
+            }
+
+            // Các lỗi khác
+            (res as NextApiResponse)
+              .status(proxyRes.statusCode || 500)
+              .json(errorResponse);
+            return resolve(true);
+          }
           const { accessToken, expiredAt } = JSON.parse(body);
           console.log({ accessToken, expiredAt });
 
-          // console.log("res from proxy server: ", body);
-          const cookies = new Cookies(req, res, {secure: process.env.NODE_ENV !== 'development'})
-          cookies.set('access_token', accessToken, {
+          const cookies = new Cookies(req, res, {
+            secure: process.env.NODE_ENV !== "development",
+          });
+          cookies.set("access_token", accessToken, {
             httpOnly: true,
-            sameSite: 'lax',
-            expires: new Date(Date.now() + 60 * 60 * 1000)
-          })
-          
-          ;(res as NextApiResponse)
+            sameSite: "lax",
+            expires: new Date(expiredAt),
+          });
+          (res as NextApiResponse)
             .status(200)
             .json({ message: "login successfully" });
         } catch (error) {
@@ -66,7 +83,7 @@ export default function handler(
 
     proxy.once("proxyRes", handleLoginResponse);
     proxy.web(req, res, {
-      target: "https://dummyjson.com",
+      target: process.env.API_URL,
       changeOrigin: true,
       // selfHandleResponse: false
       selfHandleResponse: true,
