@@ -82,6 +82,14 @@ export let theme = createTheme({
             fontSize: 16,
             fontWeight: 'bold'
           }
+        },
+        {
+          props: {color: "primary"},
+          style: {
+            color: "white",
+            fontSize: 16,
+            fontWeight: 'bold'
+          }
         }
       ]
     }

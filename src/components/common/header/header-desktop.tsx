@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { ROUTE_LIST } from "./routes";
 import React from "react";
 import {useAuth} from "@/hooks";
+import { encodeUrl } from "@/utils";
 
 export interface HeaderDesktopProps {}
 
@@ -18,15 +19,6 @@ export default function HeaderDesktop(props: HeaderDesktopProps) {
   const routeList = ROUTE_LIST.filter(
     (route) => !route.requireLogin || isLoggedIn
   );
-
-  // server render menu not require login (A)
-  // client - first render menu not require login (B)
-  // client - useEffect render second time menu render
-
-  // useEffect(() => {
-  //   setRouteList(ROUTE_LIST.filter(
-  //     (route) => !route.requireLogin || isLoggedIn))
-  // }, [isLoggedIn])
 
   return (
     <Box display={{ xs: "none", md: "block" }} py={2}>
@@ -49,7 +41,7 @@ export default function HeaderDesktop(props: HeaderDesktopProps) {
             </Link>
           ))}
           {!isLoggedIn && (
-            <Link href="/login" style={{ textDecoration: "none" }} passHref>
+            <Link href={`/login?back_to=${encodeUrl(router.asPath)}`} style={{ textDecoration: "none" }} passHref>
               <MuiLink component="p" sx={{ ml: 3, fontWeight: "medium" }}>
                 Login
               </MuiLink>

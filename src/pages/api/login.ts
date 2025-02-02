@@ -24,11 +24,6 @@ export default function handler(
   return new Promise((resolve) => {
     req.headers.cookie = "";
 
-    if (req.url?.startsWith("/login")) {
-      req.url = req.url.replace("/login", "/auth/login");
-      console.log("Modified URL:", req.url);
-    }
-
     const handleLoginResponse: ProxyResCallback = (proxyRes, req, res) => {
       let body = "";
       proxyRes.on("data", function (chunk) {

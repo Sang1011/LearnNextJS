@@ -133,11 +133,4 @@ export default function WorksPage(props: WorksPageProps) {
 }
 
 WorksPage.Layout = MainLayout;
-
-export async function getStaticProps() {
-  console.log("get static props");
-
-  return {
-    props: {},
-  };
-}
+WorksPage.requireLogin = true

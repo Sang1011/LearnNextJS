@@ -48,7 +48,7 @@ export default function WorkList({ workList, loading }: WorkListProps) {
       {workList.map((work) => (
         <Fragment key={work.id}>
           <WorkCard work={work}></WorkCard>
-          <Divider sx={{ mt: 3 }} />
+          <Divider sx={{ my: 4 }} />
         </Fragment>
       ))}
     </Box>

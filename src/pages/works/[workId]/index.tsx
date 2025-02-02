@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { MainLayout } from "../../components/layout";
+import { MainLayout } from "@/src/components/layout";
 import { useAddWork, useWorkDetail } from "@/hooks";
 import { WorkForm } from "@/src/components/work/work-form";
 import Script from "next/script";
@@ -29,7 +29,7 @@ export default function AddEditWorkPage(props: AddEditWorkPageProps) {
       if (isAddMode) {
         const newWork = await addNewWork(payload);
         await toast.success(`Add work successfully, ${newWork?.id}`);
-        router.push(`/works/${newWork?.id}`)
+        router.push(`/works/${newWork?.id}/details`)
       } else {
         await updateWork(payload);
         toast.success("Update work successfully");
@@ -80,4 +80,3 @@ export default function AddEditWorkPage(props: AddEditWorkPageProps) {
 }
 
 AddEditWorkPage.Layout = MainLayout;
-AddEditWorkPage.requireLogin = true;
